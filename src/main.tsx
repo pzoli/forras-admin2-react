@@ -2,7 +2,7 @@ import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
-import { createContext, StrictMode, useContext } from 'react'
+import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import {
@@ -32,13 +32,10 @@ createRoot(document.getElementById('root')!).render(
     <AxiosContext.Provider value={httpClient}>
       <AuthProvider {...oidcConfig}
       onSigninCallback={(user) => {
-        const axiosCtx = useContext(AxiosContext)
         console.log(`Signin callback called. user access token: ${user?.access_token}`)
-        axiosCtx.defaults.headers.common['Authorization'] = `Bearer ${user?.access_token}`;
+        httpClient.defaults.headers.common['Authorization'] = `Bearer ${user?.access_token}`;
       }}
       onRemoveUser={() => {
-        const axiosCtx = useContext(AxiosContext)
-        axiosCtx.defaults.headers.common.Authorization= ""
       }}>
         <App />
         

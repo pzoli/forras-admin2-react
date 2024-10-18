@@ -25,8 +25,10 @@ const Protected = () => {
     }, [auth, hasTriedSignin]);
 
     const fetchUserInfo = (): Promise<UserInfo> | null => {
-        axiosCtx.defaults.headers.common['Authorization'] = `Bearer ${auth.user?.access_token}`;
-        return auth.isAuthenticated ? axiosCtx.get("/api/user/info", {            
+        if (auth.user?.access_token) {
+            axiosCtx.defaults.headers.common['Authorization'] = `Bearer ${auth.user?.access_token}`;
+        }
+        return auth.isAuthenticated ? axiosCtx.get("/api/user/info", {
         }).then((res) => {
             return res.data
         }) : null
