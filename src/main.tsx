@@ -29,7 +29,6 @@ createRoot(document.getElementById('root')!).render(
   
   <StrictMode>
     <QueryClientProvider client={queryClient} contextSharing={true}>
-    <AxiosContext.Provider value={httpClient}>
       <AuthProvider {...oidcConfig}
       onSigninCallback={(user) => {
         console.log(`Signin callback called. user access token: ${user?.access_token}`)
@@ -37,10 +36,10 @@ createRoot(document.getElementById('root')!).render(
       }}
       onRemoveUser={() => {
       }}>
+        <AxiosContext.Provider value={httpClient}>
         <App />
-        
+        </AxiosContext.Provider>
       </AuthProvider>
-      </AxiosContext.Provider>
     </QueryClientProvider>
   </StrictMode >,
 )
