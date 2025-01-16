@@ -24,6 +24,7 @@ const oidcConfig = {
 
 function App() {
 
+
     const httpClient= useRef(axios.create({
     }))
 
@@ -31,19 +32,23 @@ function App() {
       <AuthProvider {...oidcConfig}
                     onSigninCallback={(user) => {
                         console.log(`Signin callback called. user access token: ${user?.access_token}`)
-                        httpClient.current.defaults.headers.common['Authorization'] = `Bearer ${user?.access_token}`;
+                        //httpClient.defaults.headers.common['Authorization'] = `Bearer ${user?.access_token}`;
+                        httpClient.current.interceptors.request.use(config => {
+                            config.headers.Authorization = `Bearer ${user?.access_token}`;
+                            return config;
+                        });
                     }}
                     onRemoveUser={() => {
                     }}>
           <AxiosContext.Provider value={httpClient.current}>
-          <Navigation />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/doctor" element={<Doctor />} />
-          <Route path="/protected" element={<Protected />} />
-        </Routes>
-      </BrowserRouter>
+              <Navigation />
+              <BrowserRouter>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/doctor" element={<Doctor />} />
+                  <Route path="/protected" element={<Protected />} />
+                </Routes>
+              </BrowserRouter>
           </AxiosContext.Provider>
       </AuthProvider>
 
