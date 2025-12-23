@@ -21,13 +21,12 @@ const Protected = () => {
         if (!(hasAuthParams() || auth.isAuthenticated || auth.activeNavigator || auth.isLoading || hasTriedSignin)) {
             void auth.signinRedirect();
             setHasTriedSignin(true);
-        }
-    }, [auth, hasTriedSignin]);
-
-    const fetchUserInfo = (): Promise<UserInfo> | null => {
-        if (auth.user?.access_token) {
+        } else {
             axiosCtx.defaults.headers.common['Authorization'] = `Bearer ${auth.user?.access_token}`;
         }
+    }, [auth, axiosCtx.defaults.headers.common, hasTriedSignin]);
+
+    const fetchUserInfo = (): Promise<UserInfo> | null => {
         return auth.isAuthenticated ? axiosCtx.get("/api/user/info", {
         }).then((res) => {
             return res.data
